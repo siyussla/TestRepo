@@ -3,7 +3,7 @@ package Payment;
 import java.io.*;
 import java.util.*;
 
-public class Payment2 {
+public class Payment {
 
     static Queue<String> Platinum = new Queue<>();
     static Queue<String> Gold = new Queue<>();
