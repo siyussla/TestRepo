@@ -1,5 +1,3 @@
-package Histogram;
-
 import java.util.*;
 
 class Histogram {
