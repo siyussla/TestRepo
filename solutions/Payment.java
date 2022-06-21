@@ -1,165 +1,166 @@
 package Payment;
 
-import java.io.*;
 import java.util.*;
 
 public class Payment {
+    public static void main(String[] args){
 
-    static Queue<String> Platinum = new Queue<>();
-    static Queue<String> Gold = new Queue<>();
-    static Queue<String> Silver = new Queue<>();
-    static Queue<String> Bronze = new Queue<>();
-    static ArrayList<Character> check = new ArrayList<>();
-    public static void main(String[] args) {
+        Scanner in = new Scanner(System.in);
+        System.out.print("INPUT : ");
+        String newtrans = in.nextLine();
+        String[] arr;
+        String time = "", newtime = "";
+        int counter = 0;
 
-        Scanner sc=new Scanner(new BufferedInputStream(System.in));
-        int i=0;
+        PriorityQueue<Tier> TierList = new PriorityQueue<>(Collections.reverseOrder());
 
-        String END = "END";
-        String CLEAR = "CLEAR";
+        while(!newtrans.equalsIgnoreCase("exit")) {
+            if(counter>0){
+                System.out.print("INPUT : ");
+                newtrans = in.nextLine();
+                if(newtrans.equalsIgnoreCase("exit")){
+                    break;
+                }
+                arr = newtrans.split(" ");
+                time = newtime;
+                newtime = arr[0];
+                TierList.add(new Tier(arr[0], arr[1], arr[2]));
+            }
+            if(counter == 0){
+                arr = newtrans.split(" ");
+                time = arr[0];
+                TierList.add(new Tier(arr[0], arr[1], arr[2]));
+                if(newtrans.equalsIgnoreCase("exit")){
+                    break;
+                }
+            }
 
+            if(counter>0){
+                if(time.charAt(time.length()-4) != newtime.charAt(newtime.length()-4)){
+                    System.out.println();
+                    System.out.print("OUTPUT : ");
+                    for(int i=0; i<100; i++){
+                        if(!TierList.isEmpty()){
+                            System.out.print(TierList.poll());
+                        }
+                        else{
+                            break;
+                        }
+                    }
+                    TierList.clear();
+                    System.out.println();
+                    System.out.println();
+                }
+            }
 
-        while(true){
-            String input=sc.nextLine();
+            if(counter == 0) {
+                System.out.print("INPUT : ");
+                newtrans = in.nextLine();
+                if (newtrans.equalsIgnoreCase("exit")) {
+                    break;
+                }
+                arr = newtrans.split(" ");
+                newtime = arr[0];
+                TierList.add(new Tier(arr[0], arr[1], arr[2]));
+            }
+            if(counter>0) {
+                System.out.print("INPUT : ");
+                newtrans = in.nextLine();
+                if (newtrans.equalsIgnoreCase("exit")) {
+                    break;
+                }
+                arr = newtrans.split(" ");
+                time = newtime;
+                newtime = arr[0];
+                TierList.add(new Tier(arr[0], arr[1], arr[2]));
+            }
 
-            if(input.equals(END)){
+            if(time.charAt(time.length()-4) != newtime.charAt(newtime.length()-4)){
+                System.out.println();
+                System.out.print("OUTPUT : ");
+                for(int i=0; i<100; i++){
+                    if(!TierList.isEmpty()){
+                        System.out.print(TierList.poll());
+                    }
+                    else{
+                        break;
+                    }
+                }
+                TierList.clear();
+                System.out.println();
+                System.out.println();
+            }
+
+            if(newtrans.equalsIgnoreCase("reboot")){
+                TierList.clear();
                 break;
             }
-
-            else if(input.equals(CLEAR)){
-                print(i);
-            }
-
-            else{
-                String[] words=input.split(" ");
-                check.add(words[0].charAt(9));
-                if(i==0){
-
-
-
-                    if(words[2].equals("PLATINUM")){
-                        Platinum.enqueue(words[1]);
-                    }
-                    else if(words[2].equals("GOLD")){
-                        Gold.enqueue(words[1]);
-                    }
-                    else if(words[2].equals("SILVER")){
-                        Silver.enqueue(words[1]);
-                    }
-                    else if(words[2].equals("BRONZE")){
-                        Bronze.enqueue(words[1]);
-                    }
-
-                }
-
-                else{
-                    if(check.get(i-1).equals(check.get(i))){
-
-                        if(words[2].equals("PLATINUM")){
-                            Platinum.enqueue(words[1]);
-                        }
-                        else if(words[2].equals("GOLD")){
-                            Gold.enqueue(words[1]);
-                        }
-                        else if(words[2].equals("SILVER")){
-                            Silver.enqueue(words[1]);
-                        }
-                        else if(words[2].equals("BRONZE")){
-                            Bronze.enqueue(words[1]);
-                        }
-                    }
-
-                    else{
-
-                        if(words[2].equals("PLATINUM")){
-                            Platinum.enqueue(words[1]);
-                        }
-                        else if(words[2].equals("GOLD")){
-                            Gold.enqueue(words[1]);
-                        }
-                        else if(words[2].equals("SILVER")){
-                            Silver.enqueue(words[1]);
-                        }
-                        else if(words[2].equals("BRONZE")){
-                            Bronze.enqueue(words[1]);
-                        }
-                        i++;
-                        print(i);
-
-                        System.exit(0);
-                    }
-
-                }
-                i++;
-            }
-        }
-
-    }
-
-    public static void print(int i){
-
-        for(int count=0;count<i;count++){
-
-            if(!Platinum.isEmpty()){
-               Platinum.dequeue();
-            }
-            if(!Gold.isEmpty()){
-
-                Gold.dequeue();
-            }
-            if(!Silver.isEmpty()){
-
-                Silver.dequeue();
-            }
-            if(!Bronze.isEmpty()){
-
-                Bronze.dequeue();
-            }
+            counter++;
         }
     }
-    public static class Queue<E> {
 
-        private java.util.LinkedList<E> list = new java.util.LinkedList<>();
+    public static class Tier implements Comparable<Tier>{
 
-        public Queue() {
+        private String tier;
+        private final String transaction, time;
+
+        public Tier(String time, String transaction, String tier){
+            this.time = time;
+            this.transaction = transaction;
+            this.tier = tier;
         }
 
-        public void enqueue(E e) {
-
-            list.addLast(e);
-
+        public void setTier(String tier) {
+            this.tier = tier;
         }
 
-        public E dequeue() {
-
-            return list.removeFirst();
-
-        }
-        
-        public E first(){
-
-            return list.peek();
-
+        public String getTier() {
+            return tier;
         }
 
-        public boolean isEmpty(){
-
-            return list.isEmpty();
-
+        public String getTime() {
+            return time;
         }
 
-        public int getSize() {
-
-            return list.size();
-
+        public String getTransaction() {
+            return transaction;
         }
 
-        public String toString(){
 
-            return "Queue: " + list.toString();
-
+        @Override
+        public int compareTo(Tier o) {
+            if(tier.equalsIgnoreCase("platinum")){
+                tier = String.valueOf(4);
+            }
+            else if(tier.equalsIgnoreCase("gold")){
+                tier = String.valueOf(3);
+            }
+            else if(tier.equalsIgnoreCase("silver")){
+                tier = String.valueOf(2);
+            }
+            else if(tier.equalsIgnoreCase("bronze")){
+                tier = String.valueOf(1);
+            }
+            if(o.getTier().equalsIgnoreCase("platinum")){
+                o.setTier(String.valueOf(4));
+            }
+            else if(o.getTier().equalsIgnoreCase("gold")){
+                o.setTier(String.valueOf(3));
+            }
+            else if(o.getTier().equalsIgnoreCase("silver")){
+                o.setTier(String.valueOf(2));
+            }
+            else if(o.getTier().equalsIgnoreCase("bronze")){
+                o.setTier(String.valueOf(1));
+            }
+            return this.tier.compareTo(o.getTier());
         }
 
+
+        @Override
+        public String toString() {
+            return this.getTransaction() +" ";
+        }
     }
 
 }
