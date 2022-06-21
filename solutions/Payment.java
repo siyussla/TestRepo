@@ -1,164 +1,104 @@
 import java.util.*;
 
 class Payment {
-    public static void main(String[] args){
+
+    public static void main(String[] args) {
+
+        PriorityQueue<Time> tran = new PriorityQueue<>();
+
+        Long start = 0L;
+        Long totalElapsed = 0L;
+        Long timespent = 0L;
+        Long elapsed;
+        int rank = 0;
+        boolean condition = true;
 
         Scanner in = new Scanner(System.in);
-        System.out.print("INPUT : ");
-        String newtrans = in.nextLine();
-        String[] arr;
-        String time = "", newtime = "";
-        int counter = 0;
 
-        PriorityQueue<Tier> TierList = new PriorityQueue<>(Collections.reverseOrder());
+        while (in.hasNext()) {
+            try {
 
-        while(!newtrans.equalsIgnoreCase("exit")) {
-            if(counter>0){
-                System.out.print("INPUT : ");
-                newtrans = in.nextLine();
-                if(newtrans.equalsIgnoreCase("exit")){
+                String data = in.nextLine();
+                String[] arr = data.split(" ");
+
+                if (data.equals("EXIT")) {
                     break;
                 }
-                arr = newtrans.split(" ");
-                time = newtime;
-                newtime = arr[0];
-                TierList.add(new Tier(arr[0], arr[1], arr[2]));
-            }
-            if(counter == 0){
-                arr = newtrans.split(" ");
-                time = arr[0];
-                TierList.add(new Tier(arr[0], arr[1], arr[2]));
-                if(newtrans.equalsIgnoreCase("exit")){
-                    break;
+                if (data.equals("REBOOT")) {
+                    tran.clear();
                 }
-            }
+                if (arr.length == 3) {    //for 3 element format
 
-            if(counter>0){
-                if(time.charAt(time.length()-4) != newtime.charAt(newtime.length()-4)){
-                    System.out.println();
-                    System.out.print("OUTPUT : ");
-                    for(int i=0; i<100; i++){
-                        if(!TierList.isEmpty()){
-                            System.out.print(TierList.poll());
+                    //for start of each 1000 milis
+                    while (condition) {
+                        start = Long.valueOf(arr[0]);
+                        double tempstart = Math.round(start / 1000d) * 1000d;
+                        start = (long) tempstart;   //to round off the long value
+                        condition = false;
+                    }
+
+                    Long timenow = Long.parseLong(arr[0]);
+                    elapsed = timenow - start;
+
+                    //PriorityQueue according to count time
+                    Long temptime = 1000L - (timenow - start);
+                    if(arr[2].equalsIgnoreCase("BRONZE")) {
+                        timespent = totalElapsed  -  temptime;
+                        rank = 0;
+                    }else if(arr[2].equalsIgnoreCase("SILVER")){
+                        timespent = totalElapsed  -  temptime - 1000L;
+                        rank = 1;
+                    }else if(arr[2].equalsIgnoreCase("GOLD")){
+                        timespent = totalElapsed  -  temptime - 2000L;
+                        rank = 2;
+                    }else if(arr[2].equalsIgnoreCase("PLATINUM")){
+                        timespent = totalElapsed  -  temptime - 3000L;
+                        rank = 3;
+                    }
+                    tran.add(new Time(timespent,rank,arr[1]));
+
+                    if (elapsed >= 1000) {
+                        condition = true;
+                        totalElapsed += 1000L;
+
+                        //only 100 transaction got cleared
+                        for (int j = 0; j < 100; j++) {
+                            System.out.print( tran.poll() + " ");
                         }
-                        else{
-                            break;
-                        }
-                    }
-                    TierList.clear();
-                    System.out.println();
-                    System.out.println();
-                }
-            }
 
-            if(counter == 0) {
-                System.out.print("INPUT : ");
-                newtrans = in.nextLine();
-                if (newtrans.equalsIgnoreCase("exit")) {
-                    break;
-                }
-                arr = newtrans.split(" ");
-                newtime = arr[0];
-                TierList.add(new Tier(arr[0], arr[1], arr[2]));
-            }
-            if(counter>0) {
-                System.out.print("INPUT : ");
-                newtrans = in.nextLine();
-                if (newtrans.equalsIgnoreCase("exit")) {
-                    break;
-                }
-                arr = newtrans.split(" ");
-                time = newtime;
-                newtime = arr[0];
-                TierList.add(new Tier(arr[0], arr[1], arr[2]));
-            }
-
-            if(time.charAt(time.length()-4) != newtime.charAt(newtime.length()-4)){
-                System.out.println();
-                System.out.print("OUTPUT : ");
-                for(int i=0; i<100; i++){
-                    if(!TierList.isEmpty()){
-                        System.out.print(TierList.poll());
-                    }
-                    else{
-                        break;
                     }
                 }
-                TierList.clear();
-                System.out.println();
-                System.out.println();
+            } catch(Exception e){
+                return ;
             }
-
-            if(newtrans.equalsIgnoreCase("reboot")){
-                TierList.clear();
-                break;
-            }
-            counter++;
         }
     }
+}
 
-    public static class Tier implements Comparable<Tier>{
+class Time implements Comparable<Time>{
+    private final Long timespent;
+    private final Integer rank;
+    private final String txn_id;
 
-        private String tier;
-        private final String transaction, time;
+    public Time(Long timespent, int rank, String txn_id) {
+        this.timespent = timespent;
+        this.rank = rank;
+        this.txn_id = txn_id;
+    }
 
-        public Tier(String time, String transaction, String tier){
-            this.time = time;
-            this.transaction = transaction;
-            this.tier = tier;
+
+    @Override
+    public String toString() {
+        return (this.txn_id);
+    }
+
+
+    @Override
+    public int compareTo(Time o) {
+        if(this.timespent.compareTo(o.timespent)==0) {
+            return this.rank.compareTo(o.rank);
         }
-
-        public void setTier(String tier) {
-            this.tier = tier;
-        }
-
-        public String getTier() {
-            return tier;
-        }
-
-        public String getTime() {
-            return time;
-        }
-
-        public String getTransaction() {
-            return transaction;
-        }
-
-
-        @Override
-        public int compareTo(Tier o) {
-            if(tier.equalsIgnoreCase("platinum")){
-                tier = String.valueOf(4);
-            }
-            else if(tier.equalsIgnoreCase("gold")){
-                tier = String.valueOf(3);
-            }
-            else if(tier.equalsIgnoreCase("silver")){
-                tier = String.valueOf(2);
-            }
-            else if(tier.equalsIgnoreCase("bronze")){
-                tier = String.valueOf(1);
-            }
-            if(o.getTier().equalsIgnoreCase("platinum")){
-                o.setTier(String.valueOf(4));
-            }
-            else if(o.getTier().equalsIgnoreCase("gold")){
-                o.setTier(String.valueOf(3));
-            }
-            else if(o.getTier().equalsIgnoreCase("silver")){
-                o.setTier(String.valueOf(2));
-            }
-            else if(o.getTier().equalsIgnoreCase("bronze")){
-                o.setTier(String.valueOf(1));
-            }
-            return this.tier.compareTo(o.getTier());
-        }
-
-
-        @Override
-        public String toString() {
-            return this.getTransaction() +" ";
-        }
+        return this.timespent.compareTo(o.timespent);
     }
 
 }
