@@ -39,14 +39,14 @@ class Histogram {
             }
             interval[bins - 1]--;
 
-            StringBuilder cutoffs = new StringBuilder();
-            StringBuilder count = new StringBuilder();
+            String cutoffs = "";
+            String count = "";
 
-            for (int k : interval) {
-                cutoffs.append(k).append(" ");
+            for (int i = 0; i < interval.length; i++) {
+                cutoffs = cutoffs + interval[i] + " ";
             }
-            for (int k : counts) {
-                count.append(k).append(" ");
+            for (int i = 0; i < counts.length; i++) {
+                count = count + counts[i] + " ";
             }
 
             System.out.println(cutoffs);
