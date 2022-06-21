@@ -1,22 +1,16 @@
 import java.util.*;
-
 class Histogram {
-
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
-
         int amount = sc.nextInt();
-
         for (int j = 0; j < amount; j++) {
 
             int testCases = sc.nextInt();
             int bins = sc.nextInt();
-
             int max = 0;
             int min = Integer.MAX_VALUE;
 
             Stack<Integer> dataPoints = new Stack<>();
-
             int[] counts = new int[bins];
             int[] interval = new int[bins + 1];
 
@@ -24,7 +18,6 @@ class Histogram {
                 int l = sc.nextInt();
                 max = Math.max(l, max);
                 min = Math.min(l, min);
-
                 dataPoints.push(l);
             }
 
@@ -35,7 +28,6 @@ class Histogram {
             }
 
             interval[bins - 1]++;
-
             while (!dataPoints.isEmpty()) {
                 for (int i = 0; i < bins; i++) {
                     if (dataPoints.peek() < interval[i] + range) {
@@ -45,18 +37,16 @@ class Histogram {
                     }
                 }
             }
-
             interval[bins - 1]--;
 
-            String cutoffs = "";
-            String count = "";
+            StringBuilder cutoffs = new StringBuilder();
+            StringBuilder count = new StringBuilder();
 
-            for (int i = 0; i < interval.length; i++) {
-                cutoffs = cutoffs + interval[i] + " ";
+            for (int k : interval) {
+                cutoffs.append(k).append(" ");
             }
-
-            for (int i = 0; i < counts.length; i++) {
-                count = count + counts[i] + " ";
+            for (int k : counts) {
+                count.append(k).append(" ");
             }
 
             System.out.println(cutoffs);
